@@ -6,29 +6,42 @@ import os.path
 def downloader(url, path):
     html = urllib2.urlopen(url)
     soup = BeautifulSoup(html, "html.parser")
-    links = []
+    links = dict()
 
-    #The way to identify if a href is downloadable is not rigorous
-    #Need to analyze the title attribute
-    #link.get('title').startswith('Download solution by')
+    problem_year = str(soup.find("title"))[str(soup.find("title")).index('(2') + 1:str(soup.find("title")).index('(') + 5]
+    problem_round = ""
+    problem_language = ""
+    problem_id = ""
+    count = 0
+
     for link in soup.find_all('a'):
-        if link.get('href')[:7] == "http://":
-            links.append(link.get('href'))
-    
-    #The current naming is not meaningful
-    #Use year-round-problem-id-username-language to form the file name
-    #This can be done by analyzing the url and the title attribute
-    #Instead of using list to contain all links, use a dict
-    #links = dict(); links[key] = link
-    #key will be the file name and the value is the link
-    for i in range(len(links)):
-        print "Downloading: %s/%s" % (i + 1, len(links))
-        temp = str(links[i])
-        response = urllib2.urlopen(temp)
-        test = response.read()
-        with open(os.path.join(path, "code%s.zip" % (i + 1)), "wb") as code:
-            code.write(test)
+        href = link.get('href')
+        if link.parent.get('id') == 'navbar-current':
+            problem_round = link.string
+            count += 1
+        if href[:10] == "languages/":
+            problem_language = href[10:]
+            count += 1
+        if href[:9] == "problems/":
+            problem_id = href[len(href) - 1:]
+            count += 1
+        if count == 3:
+            break
 
+    for link in soup.find_all('a'):
+        href = link.get('href')
+        if href[:7] == "http://" and link.get('title')[:20] == "Download solution by":
+            filename = "%s-%s-%s-%s-%s" % (problem_year, problem_round, problem_id, link.get('title')[21:], problem_language)
+            links[filename] = href
+
+    count = 1
+    for i in links:
+        print "Downloading: %s/%s" % (count, len(links))
+        count += 1
+        response = urllib2.urlopen(links[i])
+        test = response.read()
+        with open(os.path.join(path, i), "wb") as code:
+            code.write(test)
     print "Done"
 
 def main():
@@ -40,6 +53,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
