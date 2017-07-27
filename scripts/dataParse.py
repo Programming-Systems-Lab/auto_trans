@@ -31,7 +31,7 @@ def downloader(url, path):
     for link in soup.find_all('a'):
         href = link.get('href')
         if href[:7] == "http://" and link.get('title')[:20] == "Download solution by":
-            filename = "%s-%s-%s-%s-%s" % (problem_year, problem_round, problem_id, link.get('title')[21:], problem_language)
+            filename = "%s-%s-%s-%s-%s.zip" % (problem_year, problem_round, problem_id, link.get('title')[21:], problem_language)
             links[filename] = href
 
     count = 1
