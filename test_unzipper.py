@@ -20,4 +20,4 @@ def main():
     TestZipper()
 
 if __name__ == '__main__':
-    unittest.Main()
+    unittest.main()
