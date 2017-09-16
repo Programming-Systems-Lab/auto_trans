@@ -9,7 +9,7 @@ class TestZipper(unittest.TestCase):
                 zip_ref = zipfile.ZipFile("%s/%s" % ("./", file), 'r')
                 zip_ref.extractall("%s/%s" % ("./", file[:len(file) - 4]))
                 zip_ref.close()
-                os.remove("%s/%s" % ("./2014-Round 3-1-argentony-Java.zip", file))
+                os.remove("%s/%s" % ("./", file))
         count = 0
         for file in os.listdir("./"):
             if file.endswith(".zip"):
