@@ -11,7 +11,7 @@ class TestZipper(unittest.TestCase):
                 zip_ref.close()
                 os.remove("%s/%s" % ("./2014-Round 3-1-argentony-Java.zip", file))
         count = 0
-        for file in os.listdir("./2014-Round 3-1-argentony-Java.zip"):
+        for file in os.listdir("./"):
             if file.endswith(".zip"):
                 count += 1
         self.assertEqual(count, 0)
